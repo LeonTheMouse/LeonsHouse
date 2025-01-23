@@ -1,11 +1,9 @@
 import './style.css'
-import image from './Galaxy.jpg';
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const scene = new THREE.Scene();
-
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, .1, 1000);
 
 const renderer = new THREE.WebGLRenderer({
@@ -47,15 +45,21 @@ function addStar() {
 
 Array(200).fill().forEach(addStar);
 
-const spaceTexture = new THREE.TextureLoader().load(image);
+const spaceTexture = new THREE.TextureLoader().load('/src/Galaxy.jpg');
 scene.background = spaceTexture;
- 
-
-function animate() {
-  requestAnimationFrame(animate);
+function moveCamera() {
+  const t = document.body.getBoundingClientRect().top;
   torus.rotation.x += 0.01;
   torus.rotation.y += 0.003;
   torus.rotation.z += 0.03;
+  camera.position.z = t * -0.1;
+  camera.position.x = t * -0.0002;
+  camera.position.y = t * -0.0002;
+}
+document.body.onscroll = moveCamera;
+
+function animate() {
+  requestAnimationFrame(animate);
   renderer.render(scene, camera);
   controls.update();
 }
